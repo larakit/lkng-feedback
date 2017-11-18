@@ -1,0 +1,28 @@
+{
+    "name": "larakit/lkng-feedback",
+    "description": "[Larakit] [angular] feedback",
+    "keywords": [
+        "laravel 5",
+        "laravel",
+        "larakit"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexey Berdnikov",
+            "email": "aberdnikov@gmail.com"
+        }
+    ],
+    "require": {
+        "larakit/ng-adminlte": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Larakit\\": "src"
+        },
+        "files": [
+            "init.php"
+        ]
+    },
+    "minimum-stability": "dev"
+}
