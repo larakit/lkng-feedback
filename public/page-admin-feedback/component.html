@@ -17,9 +17,30 @@
                         list-opened="$ctrl.listOpened">
                     <item-header>
                         <blockquote>
-                            <p>{{model.comment}}</p>
-                            <small><strong>{{model.name}}</strong>, {{model.phone_ext}}, IP:{{model.ip}}, добавлена: {{model.created_at}}</small>
+                            <div class="row">
+                                <div class="col col-lg-4">
+                                    <p>{{model.comment}}</p>
+                                    <small><strong>{{model.name}}</strong>,
+                                        e-mail: {{model.email}},
+                                        <br>
+                                        {{model.phone_ext}},
+                                        IP: {{model.ip}}, добавлена: {{model.created_at}}
+                                    </small>
+                                </div>
+                                <div class="col col-lg-8" ng-if="model.files.length">
+                                    <h4>Прикрепленные файлы:</h4>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-6 col-sm-12" ng-repeat="file in model.files">
+                                            <span>
+                                                <i class="fa fa-download"></i>&nbsp;<a ng-href="{{file.full_url}}" target="_blank">{{file.name}}</a>
+                                            </span> &nbsp;
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </blockquote>
+
                         <div class="btn-group">
                             <button class="btn"
                                     ng-click="$ctrl.setState(model,-1)"
@@ -44,6 +65,12 @@
                                     ng-class="{'btn-default':2!=model.state,'btn-success':2==model.state}">
                                 <i class="fa fa-thumbs-o-up"></i>
                                 благодарность
+                            </button>
+                            <button class="btn"
+                                    ng-click="$ctrl.setState(model,3)"
+                                    ng-class="{'btn-default':3!=model.state,'btn-primary':3==model.state}">
+                                <i class="fa fa-star"></i>
+                                предложение/заказ
                             </button>
                         </div>
                     </item-header>

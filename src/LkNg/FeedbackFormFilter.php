@@ -25,20 +25,20 @@ class FeedbackFormFilter extends \Larakit\FormFilter\FormFilter {
                 ->setTypeCheckbox()
                 ->options([
                     [
-                        'id'       => -1,
-                        'toString' => '<span class="label label-default">в мусорке</span>',
-                    ],
-                    [
                         'id'       => 0,
-                        'toString' => '<span class="label label-info">новый заказ</span>',
+                        'toString' => '<span class="label label-info">не разобранное</span>',
                     ],
                     [
                         'id'       => 1,
-                        'toString' => '<span class="label label-success">благодарность</span>',
+                        'toString' => '<span class="label label-danger">жалоба</span>',
                     ],
                     [
                         'id'       => 2,
-                        'toString' => '<span class="label label-danger">жалоба</span>',
+                        'toString' => '<span class="label label-success">благодарность</span>',
+                    ],
+                    [
+                        'id'       => 3,
+                        'toString' => '<span class="label label-primary">предложение/заказ</span>',
                     ],
                 ])
         );

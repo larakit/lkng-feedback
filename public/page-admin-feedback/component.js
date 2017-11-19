@@ -5,7 +5,7 @@
     angular
         .module('lkng-feedback')
         .component('pageAdminFeedback', {
-            templateUrl: '/!/ng/components/page-admin-feedback/component.html',
+            templateUrl: '/packages/larakit/lkng-feedback/page-admin-feedback/component.html?'+Math.random(),
             controller: Controller
         });
 

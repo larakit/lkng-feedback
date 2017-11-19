@@ -9,7 +9,7 @@
 Route::any('!/ajax/admin-feedback/save', function () {
     $id    = (int) \Request::get('id');
     $state = (int) \Request::get('state');
-    if(!in_array($state, [-1, 1, 2])) {
+    if(!in_array($state, [-1, 1, 2, 3])) {
         $state = 0;
     }
     $model = \Larakit\LkNg\Feedback::findOrFail($id);
@@ -20,7 +20,7 @@ Route::any('!/ajax/admin-feedback/save', function () {
             $model->state = $state;
             $model->save();
         }
-        $message = 'Статус заказа изменен!';
+        $message = 'Статус обращения изменен!';
     }
     
     return [

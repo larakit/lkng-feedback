@@ -19,13 +19,21 @@ class Feedback extends Model {
         'ip',
         'state',
     ];
-    
-    protected $appends = [
+    protected $appends  = [
         'phone_ext',
     ];
+    protected $with     = [
+        'files',
+    ];
+    
+    function files() {
+        return $this->hasMany(FeedbackFile::class, 'feedback_id');
+    }
     
     function getPhoneExtAttribute() {
-        return $this->denormalize($this->phone);
+        $phone = $this->denormalize($this->phone);
+        
+        return $phone ? $phone : $this->phone;
     }
     
     function denormalize($phone) {
@@ -52,30 +60,48 @@ class Feedback extends Model {
         return null;
     }
     
-    function getTags() {
-        $tags   = [];
-        $tags[] = '#обратная_связь';
+    static function freeFiles() {
+        $ret          = [];
+        $files        = \Larakit\LkNg\FeedbackFile::where('token', '=', csrf_token())->where('feedback_id', '=', 0)->get()->pluck('name', 'id');
+        $ret['files'] = $files;
+        $html         = [];
+        foreach($files as $id => $name) {
+            $html[] = '<div class="feedback-file">';
+            $html[] = $name;
+            $html[] = '&nbsp;';
+            $html[] = '<i class="fa fa-times js-feedback-file-remove pointer" title="Удалить вложение" data-id="' . $id . '"></i>';
+            $html[] = '</div>';
+        }
+        $ret['html'] = implode(PHP_EOL, $html);
         
-        return implode(' ', $tags);
+        return $ret;
     }
     
 }
 
+Feedback::creating(function ($model) {
+    $phone = $model->normalize($model);
+    if($phone) {
+        $model->phone = $phone;
+    }
+    
+});
+
 Feedback::created(function ($model) {
     $send   = [];
     $send[] = 'ИМЯ: ' . $model->name;
-    $send[] = 'ТЕЛЕФОН: ' . HelperPhone::denormalize($model->phone);
+    $send[] = 'ТЕЛЕФОН: ' . $model->phone_ext;
     $send[] = 'IP: ' . $model->ip;
     $send[] = 'КОММЕНТАРИЙ: ' . $model->comment;
-    \Larakit\TelegramBot::add($model->getTags());
+    \Larakit\TelegramBot::add('#обратная_связь');
     \Larakit\TelegramBot::add(implode(PHP_EOL, $send));
-    \Larakit\TelegramBot::send($model->getTelergam());
+    \Larakit\TelegramBot::send(env('FEEDBACK_TELEGRAM'));
     
-    $email = env('TO_EMAIL');
+    $email = env('FEEDBACK_EMAIL');
     if($email) {
         \Mail::send('!.mails.order', ['data' => $send], function (\Illuminate\Mail\Message $message) use ($model) {
             $message->to($model->getEmail());
-            $message->subject('ТЕРЕМ: обратная связь');
+            $message->subject(ENV('FEEDBACK_TITLE') . ': обратная связь');
         });
     }
 });

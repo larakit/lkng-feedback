@@ -6,3 +6,4 @@
     ->usePackage('larakit/ng-adminlte')
     ->setSourceDir('public')
     ->jsPackage('page-admin-feedback/component.js');
+\Larakit\Boot::register_migrations(__DIR__ . '/migrations');
